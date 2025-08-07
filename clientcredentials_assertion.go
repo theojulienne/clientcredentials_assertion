@@ -53,7 +53,7 @@ func (c *tokenSource) Token() (*oauth2.Token, error) {
 		return nil, err
 	}
 
-	var cc clientcredentials.Config = c.conf.Config
+	cc := c.conf.Config
 	cc.ClientSecret = ""                    // MUST be empty because we're using an assertion
 	cc.AuthStyle = oauth2.AuthStyleInParams // MUST be in params because we're using an assertion
 	if cc.EndpointParams == nil {

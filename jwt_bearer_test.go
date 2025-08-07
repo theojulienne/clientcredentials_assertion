@@ -54,9 +54,9 @@ func TestJwtBearerAssertionFromPrivateKey(t *testing.T) {
 	assert.Equal(t, clientID, registeredClaims.Subject)
 	assert.Contains(t, registeredClaims.Audience, tokenURL)
 	assert.NotEmpty(t, registeredClaims.ID)
-	assert.True(t, registeredClaims.ExpiresAt.Time.After(time.Now()))
-	assert.True(t, registeredClaims.IssuedAt.Time.Before(time.Now().Add(time.Second)))
-	assert.True(t, registeredClaims.NotBefore.Time.Before(time.Now().Add(time.Second)))
+	assert.True(t, registeredClaims.ExpiresAt.After(time.Now()))
+	assert.True(t, registeredClaims.IssuedAt.Before(time.Now().Add(time.Second)))
+	assert.True(t, registeredClaims.NotBefore.Before(time.Now().Add(time.Second)))
 }
 
 func TestJwtBearerAssertion_Integration(t *testing.T) {
@@ -88,13 +88,14 @@ func TestJwtBearerAssertion_Integration(t *testing.T) {
 		assert.Equal(t, clientID, registeredClaims.Subject)
 		assert.Contains(t, registeredClaims.Audience, "http://"+r.Host+"/token")
 		assert.NotEmpty(t, registeredClaims.ID)
-		assert.True(t, registeredClaims.ExpiresAt.Time.After(time.Now()))
-		assert.True(t, registeredClaims.IssuedAt.Time.Before(time.Now().Add(time.Second)))
-		assert.True(t, registeredClaims.NotBefore.Time.Before(time.Now().Add(time.Second)))
+		assert.True(t, registeredClaims.ExpiresAt.After(time.Now()))
+		assert.True(t, registeredClaims.IssuedAt.Before(time.Now().Add(time.Second)))
+		assert.True(t, registeredClaims.NotBefore.Before(time.Now().Add(time.Second)))
 
 		// Send success response
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"access_token":"test-token","token_type":"Bearer","expires_in":3600}`))
+		_, err = w.Write([]byte(`{"access_token":"test-token","token_type":"Bearer","expires_in":3600}`))
+		require.NoError(t, err)
 	}))
 	defer server.Close()
 

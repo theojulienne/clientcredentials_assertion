@@ -29,7 +29,8 @@ func TestConfig_Token_Success(t *testing.T) {
 
 		// Send response
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"access_token":"test-access-token","token_type":"Bearer","expires_in":3600}`))
+		_, err = w.Write([]byte(`{"access_token":"test-access-token","token_type":"Bearer","expires_in":3600}`))
+		require.NoError(t, err)
 	}))
 	defer server.Close()
 
@@ -123,7 +124,8 @@ func TestTokenSource_Token_Success(t *testing.T) {
 
 		// Send response
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"access_token":"test-access-token","token_type":"Bearer","expires_in":3600}`))
+		_, err = w.Write([]byte(`{"access_token":"test-access-token","token_type":"Bearer","expires_in":3600}`))
+		require.NoError(t, err)
 	}))
 	defer server.Close()
 
